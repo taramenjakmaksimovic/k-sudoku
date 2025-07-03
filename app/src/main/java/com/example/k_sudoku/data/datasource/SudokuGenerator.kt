@@ -1,25 +1,25 @@
 package com.example.k_sudoku.data.datasource
 
-import androidx.compose.foundation.layout.Row
-import com.example.k_sudoku.domain.model.SudokuBoard
+import kotlin.random.Random
+
 
 object SudokuGenerator {
     fun generateFullBoard(): Array<IntArray> {
         val board = Array(9) { IntArray(9) }
-        solve(board)
+        solve(board, Random.Default)
         return board
 
     }
 
 
-    private fun solve(board: Array<IntArray>): Boolean {
+    private fun solve(board: Array<IntArray>, random: Random): Boolean {
         for (row in 0..8) {
             for (col in 0..8) {
                 if (board[row][col] == 0) {
-                    for (num in (1..9).shuffled()) {
+                    for (num in (1..9).shuffled(random)) {
                         if (isValid(board, row, col, num)) {
                             board[row][col] = num
-                            if (solve(board))
+                            if (solve(board,random))
                                 return true
                             board[row][col] = 0
                         }
@@ -41,7 +41,7 @@ object SudokuGenerator {
         val boxCol = col / 3 * 3
         for (i in 0..2)
             for (j in 0..2)
-                if (board[boxRow + i][boxCol + i] == num)
+                if (board[boxRow + i][boxCol + j] == num)
                     return false
         return true
     }
@@ -49,8 +49,8 @@ object SudokuGenerator {
     fun maskBoard(
         fullBoard: Array<IntArray>,
         hints: Int = 36
-    ): Pair<List<MutableList<Int>>, List<List<Boolean>>> {
-        val cells = List(9) { row -> MutableList(9) { col -> fullBoard[row][col] } }
+    ): Pair<List<MutableList<Int>>, List<MutableList<Boolean>>> {
+        val cells = fullBoard.map { it.toMutableList() }.toMutableList()
         val initial = List(9) { MutableList(9) { true } }
         val allPositions = (0..8).flatMap { row -> (0..8).map { col -> row to col } }.shuffled()
         val toRemove = 81 - hints

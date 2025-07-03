@@ -55,7 +55,7 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
                     val value = board.cells[row][col]
                     val isInitial = board.initial[row][col]
 
-                    var text by remember {
+                    var text by remember(value) {
                         mutableStateOf(
                             if (value != 0) value.toString() else ""
                         )

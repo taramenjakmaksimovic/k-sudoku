@@ -4,4 +4,6 @@ import com.example.k_sudoku.domain.model.SudokuBoard
 
 interface SudokuRepository {
     fun generateEasyBoard() : SudokuBoard
+    fun generateIntermediateBoard() : SudokuBoard
+    fun generateHardBoard() : SudokuBoard
 }
