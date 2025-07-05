@@ -1,9 +1,8 @@
 package com.example.k_sudoku.presentation.viewmodel
 
-import android.telecom.StatusHints
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.k_sudoku.data.repository.SudokuRepositoryImpl
 import com.example.k_sudoku.domain.model.SudokuBoard
 import com.example.k_sudoku.domain.model.SudokuDifficulty
 import com.example.k_sudoku.domain.usecase.GenerateSudokuUseCase
@@ -48,5 +47,37 @@ class SudokuViewModel(
 
     fun setDifficulty(difficulty: SudokuDifficulty) {
         resetGame(difficulty)
+    }
+
+    fun isSolved() : Boolean {
+        val board=_boardState.value.cells
+        for (i in 0..9){
+            val row = mutableSetOf<Int>()
+            val col = mutableSetOf<Int>()
+            for(j in 0..9){
+                val rolVal = board[i][j]
+                val colVal = board[j][i]
+                if(rolVal !in 1..9 || rolVal in row)
+                    return false
+                if(colVal !in 1..9 || colVal in col)
+                    return false
+                row.add(rolVal)
+                col.add(colVal)
+            }
+        }
+        for(blockRow in 0..3) {
+            for (blockCol in 0..3) {
+                val block = mutableSetOf<Int>()
+                for(i in 0..3){
+                    for (j in 0..3){
+                        val value = board[blockRow * 3 + i][blockCol * 3 + j]
+                        if (value !in 1..9 || value in block)
+                            return false
+                        block.add(value)
+                    }
+                }
+            }
+        }
+        return true
     }
 }

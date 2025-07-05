@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,12 +35,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.k_sudoku.presentation.viewmodel.SudokuViewModel
-
+import kotlinx.coroutines.delay
 
 
 @Composable
 fun SudokuScreen(viewModel: SudokuViewModel) {
     val board by viewModel.boardState.collectAsState()
+    var solvedMessage by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(solvedMessage) {
+        if (solvedMessage!=null){
+            delay(3000L)
+            solvedMessage=null
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -155,10 +164,36 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
                 }
             }
         }
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(16.dp))
+        Box (modifier = Modifier.height(24.dp)) {
+            solvedMessage?.let { message ->
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = message,
+                    color = if (message.contains("Congratulations")) Color.Green else Color.Red,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp
+                )
+            }
+        }
+        Spacer(Modifier.height(16.dp))
+        Button(
+            onClick = {
+                solvedMessage = if (viewModel.isSolved()){
+                    "Congratulations! You solved this sudoku board!"
+                } else {
+                    "You didn't solve this sudoku board!"
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Check solution")
+        }
+        Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
                 viewModel.resetGame()
+                solvedMessage = null
             },
             modifier = Modifier.fillMaxWidth()
         ) {
