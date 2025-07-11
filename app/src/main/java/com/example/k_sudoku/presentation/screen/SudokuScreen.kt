@@ -190,6 +190,14 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
             Text("Check solution")
         }
         Spacer(Modifier.height(16.dp))
+        Button(onClick = {
+            viewModel.solveBoard()
+        },
+            modifier = Modifier.fillMaxWidth()
+            ) {
+            Text("Generate solution")
+        }
+        Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
                 viewModel.resetGame()

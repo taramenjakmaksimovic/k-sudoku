@@ -1,17 +1,18 @@
 package com.example.k_sudoku.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.k_sudoku.domain.model.SudokuBoard
 import com.example.k_sudoku.domain.model.SudokuDifficulty
 import com.example.k_sudoku.domain.usecase.GenerateSudokuUseCase
+import com.example.k_sudoku.domain.usecase.SolveSudokuUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SudokuViewModel(
-    private val generateUseCase: GenerateSudokuUseCase
+    private val generateUseCase: GenerateSudokuUseCase,
+    private val solveUseCase: SolveSudokuUseCase
 ) : ViewModel() {
     private var currentDifficulty: SudokuDifficulty = SudokuDifficulty.EASY
 
@@ -45,16 +46,16 @@ class SudokuViewModel(
         }
     }
 
-    fun setDifficulty(difficulty: SudokuDifficulty) {
+  /*  fun setDifficulty(difficulty: SudokuDifficulty) {
         resetGame(difficulty)
-    }
+    } */
 
     fun isSolved() : Boolean {
         val board=_boardState.value.cells
-        for (i in 0..9){
+        for (i in 0..8){
             val row = mutableSetOf<Int>()
             val col = mutableSetOf<Int>()
-            for(j in 0..9){
+            for(j in 0..8){
                 val rolVal = board[i][j]
                 val colVal = board[j][i]
                 if(rolVal !in 1..9 || rolVal in row)
@@ -65,11 +66,11 @@ class SudokuViewModel(
                 col.add(colVal)
             }
         }
-        for(blockRow in 0..3) {
-            for (blockCol in 0..3) {
+        for(blockRow in 0..2) {
+            for (blockCol in 0..2) {
                 val block = mutableSetOf<Int>()
-                for(i in 0..3){
-                    for (j in 0..3){
+                for(i in 0..2){
+                    for (j in 0..2){
                         val value = board[blockRow * 3 + i][blockCol * 3 + j]
                         if (value !in 1..9 || value in block)
                             return false
@@ -79,5 +80,16 @@ class SudokuViewModel(
             }
         }
         return true
+    }
+
+    fun solveBoard(){
+        viewModelScope.launch {
+            val currentBoard = _boardState.value
+            val solved = solveUseCase(currentBoard)
+            if(solved != null){
+                _boardState.value = solved
+            }
+            // TODO else
+        }
     }
 }
