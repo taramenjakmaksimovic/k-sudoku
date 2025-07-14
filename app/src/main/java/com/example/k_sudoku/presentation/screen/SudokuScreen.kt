@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,9 +40,13 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun SudokuScreen(viewModel: SudokuViewModel) {
+fun SudokuScreen(
+    viewModel: SudokuViewModel,
+    onBackToHome: () -> Unit
+    ) {
     val board by viewModel.boardState.collectAsState()
     var solvedMessage by remember { mutableStateOf<String?>(null) }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(solvedMessage) {
         if (solvedMessage!=null){
@@ -53,6 +58,7 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -164,7 +170,9 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
                 }
             }
         }
+
         Spacer(Modifier.height(16.dp))
+
         Box (modifier = Modifier.height(24.dp)) {
             solvedMessage?.let { message ->
                 Spacer(Modifier.height(16.dp))
@@ -176,7 +184,9 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
                 )
             }
         }
+
         Spacer(Modifier.height(16.dp))
+
         Button(
             onClick = {
                 solvedMessage = if (viewModel.isSolved()){
@@ -185,27 +195,36 @@ fun SudokuScreen(viewModel: SudokuViewModel) {
                     "You didn't solve this sudoku board!"
                 }
             },
-            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Check solution")
         }
+
         Spacer(Modifier.height(16.dp))
+
         Button(onClick = {
             viewModel.solveBoard()
         },
-            modifier = Modifier.fillMaxWidth()
             ) {
             Text("Generate solution")
         }
+
         Spacer(Modifier.height(16.dp))
+
         Button(
             onClick = {
                 viewModel.resetGame()
                 solvedMessage = null
             },
-            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Reset game")
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = { onBackToHome() },
+        ) {
+            Text("Go back to Homepage")
         }
     }
 }
