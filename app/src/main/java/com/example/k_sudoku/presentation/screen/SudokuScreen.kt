@@ -6,14 +6,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +47,7 @@ import com.example.k_sudoku.presentation.viewmodel.SudokuViewModel
 import kotlinx.coroutines.delay
 
 
+
 @Composable
 fun SudokuScreen(
     viewModel: SudokuViewModel,
@@ -47,6 +56,7 @@ fun SudokuScreen(
     val board by viewModel.boardState.collectAsState()
     var solvedMessage by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
+    var menuExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(solvedMessage) {
         if (solvedMessage!=null){
@@ -62,6 +72,46 @@ fun SudokuScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.TopEnd)
+
+        ){
+            IconButton(onClick = {menuExpanded=true}) {
+                Icon(Icons.Default.MoreVert, contentDescription = "")
+            }
+
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false}
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Generate solution") },
+                    onClick = {
+                        menuExpanded = false
+                        viewModel.solveBoard()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Reset game") },
+                    onClick = {
+                        menuExpanded = false
+                        viewModel.resetGame()
+                        solvedMessage = null
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Go back to Homepage") },
+                    onClick = {
+                        menuExpanded = false
+                        onBackToHome()
+                    }
+                )
+
+            }
+        }
+
         Spacer(Modifier.height(32.dp))
 
         for (row in 0..8) {
@@ -201,7 +251,7 @@ fun SudokuScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        Button(onClick = {
+      /*  Button(onClick = {
             viewModel.solveBoard()
         },
             ) {
@@ -225,6 +275,6 @@ fun SudokuScreen(
             onClick = { onBackToHome() },
         ) {
             Text("Go back to Homepage")
-        }
+        } */
     }
 }
