@@ -51,7 +51,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun SudokuScreen(
     viewModel: SudokuViewModel,
-    onBackToHome: () -> Unit
+    onBackToHome: () -> Unit,
+    onExit: () -> Unit
     ) {
     val board by viewModel.boardState.collectAsState()
     var solvedMessage by remember { mutableStateOf<String?>(null) }
@@ -107,6 +108,13 @@ fun SudokuScreen(
                     onClick = {
                         menuExpanded = false
                         onBackToHome()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Exit") },
+                    onClick = {
+                        menuExpanded = false
+                        onExit()
                     }
                 )
 

@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
                     viewModel = viewModel,
                     onBackToHome = {
                         currentScreen = "home"
+                    },
+                    onExit = {
+                        finish()
                     }
                 )
             }
