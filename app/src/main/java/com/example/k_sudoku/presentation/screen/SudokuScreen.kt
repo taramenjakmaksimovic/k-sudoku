@@ -57,6 +57,7 @@ fun SudokuScreen(
     var solvedMessage by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
     var menuExpanded by remember { mutableStateOf(false) }
+    val remainingHints by viewModel.remainingHints.collectAsState()
 
     LaunchedEffect(solvedMessage) {
         if (solvedMessage!=null){
@@ -233,6 +234,18 @@ fun SudokuScreen(
                     fontSize = 18.sp
                 )
             }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                viewModel.provideHint()
+            },
+            enabled = remainingHints > 0
+
+        ) {
+            Text("Hint")
         }
 
         Spacer(Modifier.height(16.dp))

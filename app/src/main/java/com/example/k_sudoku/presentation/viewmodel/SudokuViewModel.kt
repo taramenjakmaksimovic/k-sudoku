@@ -15,6 +15,8 @@ class SudokuViewModel(
     private val solveUseCase: SolveSudokuUseCase
 ) : ViewModel() {
     private var currentDifficulty: SudokuDifficulty = SudokuDifficulty.EASY
+    private val _remainingHints = MutableStateFlow(0)
+    val remainingHints: StateFlow<Int> = _remainingHints
 
 
     private val _boardState = MutableStateFlow(
@@ -28,6 +30,7 @@ class SudokuViewModel(
     init {
         viewModelScope.launch {
             _boardState.value = generateUseCase(currentDifficulty)
+            _remainingHints.value = currentDifficulty.maxHintsAllowed
         }
     }
 
@@ -43,6 +46,7 @@ class SudokuViewModel(
         currentDifficulty=difficulty
         viewModelScope.launch {
             _boardState.value = generateUseCase(currentDifficulty)
+            _remainingHints.value = currentDifficulty.maxHintsAllowed
         }
     }
 
@@ -91,5 +95,32 @@ class SudokuViewModel(
             }
             // TODO else
         }
+    }
+
+    fun provideHint() {
+        if (_remainingHints.value <= 0) return
+
+        val board = _boardState.value
+        val newCells = board.cells.map { it.toMutableList() }
+        val solution = board.solution
+
+        if (solution.isEmpty() || solution[0].isEmpty()) return
+
+        val emptyCells = mutableListOf<Pair<Int, Int>>()
+        for (row in 0..8) {
+            for (col in 0..8) {
+                if (newCells[row][col] == 0) {
+                    emptyCells.add(row to col)
+                }
+            }
+        }
+
+        if (emptyCells.isEmpty()) return
+
+        val (hintRow, hintCol) = emptyCells.random()
+        newCells[hintRow][hintCol] = solution[hintRow][hintCol]
+
+        _boardState.value = board.copy(cells = newCells)
+        _remainingHints.value -= 1
     }
 }
