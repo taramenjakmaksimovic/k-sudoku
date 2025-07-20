@@ -102,6 +102,7 @@ class SudokuViewModel(
 
         val board = _boardState.value
         val newCells = board.cells.map { it.toMutableList() }
+        val newInitial = board.initial.map { it.toMutableList() }
         val solution = board.solution
 
         if (solution.isEmpty() || solution[0].isEmpty()) return
@@ -119,8 +120,9 @@ class SudokuViewModel(
 
         val (hintRow, hintCol) = emptyCells.random()
         newCells[hintRow][hintCol] = solution[hintRow][hintCol]
+        newInitial[hintRow][hintCol] = true
 
-        _boardState.value = board.copy(cells = newCells)
+        _boardState.value = board.copy(cells = newCells, initial = newInitial)
         _remainingHints.value -= 1
     }
 }
