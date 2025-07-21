@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.k_sudoku.presentation.viewmodel.SudokuViewModel
 import kotlinx.coroutines.delay
-
+import java.util.Locale
 
 
 @Composable
@@ -59,6 +59,13 @@ fun SudokuScreen(
     val scrollState = rememberScrollState()
     var menuExpanded by remember { mutableStateOf(false) }
     val remainingHints by viewModel.remainingHints.collectAsState()
+    val elapsedTime by viewModel.elapsedTime.collectAsState()
+    val isPaused by viewModel.isPaused.collectAsState()
+
+    val hours = elapsedTime / 3600
+    val minutes = (elapsedTime % 3600) / 60
+    val seconds = elapsedTime % 60
+
 
     LaunchedEffect(solvedMessage) {
         if (solvedMessage!=null){
@@ -71,9 +78,20 @@ fun SudokuScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(16.dp),
+            .padding(top = 25.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            String.format
+                (Locale.getDefault(), "%02d:%02d:%02d",
+                hours, minutes, seconds),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding( 4.dp)
+
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -244,7 +262,15 @@ fun SudokuScreen(
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Button(
+            onClick = {
+                viewModel.togglePause()
+            }
+        ) {
+            Text( if(isPaused) "Resume" else "Pause")
+        }
+
+        Spacer(Modifier.height(6.dp))
 
         Button(
             onClick = {
@@ -256,7 +282,7 @@ fun SudokuScreen(
             Text("Hint")
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(6.dp))
 
         Button(
             onClick = {
@@ -270,7 +296,7 @@ fun SudokuScreen(
             Text("Check solution")
         }
 
-        Spacer(Modifier.height(16.dp))
+       // Spacer(Modifier.height(16.dp))
 
       /*  Button(onClick = {
             viewModel.solveBoard()

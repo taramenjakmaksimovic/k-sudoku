@@ -6,8 +6,11 @@ import com.example.k_sudoku.domain.model.SudokuBoard
 import com.example.k_sudoku.domain.model.SudokuDifficulty
 import com.example.k_sudoku.domain.usecase.GenerateSudokuUseCase
 import com.example.k_sudoku.domain.usecase.SolveSudokuUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class SudokuViewModel(
@@ -17,6 +20,14 @@ class SudokuViewModel(
     private var currentDifficulty: SudokuDifficulty = SudokuDifficulty.EASY
     private val _remainingHints = MutableStateFlow(0)
     val remainingHints: StateFlow<Int> = _remainingHints
+
+    private val _elapsedTime = MutableStateFlow(0L)
+    val elapsedTime : StateFlow<Long> = _elapsedTime
+
+    private val _isPaused = MutableStateFlow(false)
+    val isPaused : StateFlow<Boolean> = _isPaused
+
+    private var timerJob : Job? = null
 
 
     private val _boardState = MutableStateFlow(
@@ -47,6 +58,8 @@ class SudokuViewModel(
         viewModelScope.launch {
             _boardState.value = generateUseCase(currentDifficulty)
             _remainingHints.value = currentDifficulty.maxHintsAllowed
+            resetTimer()
+            startTimer()
         }
     }
 
@@ -124,5 +137,42 @@ class SudokuViewModel(
 
         _boardState.value = board.copy(cells = newCells, initial = newInitial)
         _remainingHints.value -= 1
+    }
+
+    fun startTimer(){
+        stopTimer()
+        _isPaused.value=false
+        timerJob=viewModelScope.launch {
+            while (isActive){
+                delay(1000)
+                if(!_isPaused.value)
+                    _elapsedTime.value+=1
+            }
+        }
+    }
+
+    fun pauseTimer(){
+        _isPaused.value=true
+    }
+
+    fun resumeTimer(){
+        _isPaused.value=false
+    }
+
+    fun togglePause(){
+        if(_isPaused.value)
+            resumeTimer()
+        else
+            pauseTimer()
+    }
+
+    fun resetTimer(){
+        _elapsedTime.value=0
+        _isPaused.value=false
+    }
+
+    fun stopTimer(){
+        timerJob?.cancel()
+        timerJob=null
     }
 }
