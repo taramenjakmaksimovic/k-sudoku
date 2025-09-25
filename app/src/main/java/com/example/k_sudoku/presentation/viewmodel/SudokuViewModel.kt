@@ -105,8 +105,8 @@ class SudokuViewModel(
             val solved = solveUseCase(currentBoard)
             if(solved != null){
                 _boardState.value = solved
+                stopTimer()
             }
-            // TODO else
         }
     }
 
