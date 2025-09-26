@@ -219,7 +219,7 @@ fun SudokuScreen(
                                     viewModel.onCellChanged(row, col, newText.toInt())
                                 }
                             },
-                            readOnly = isInitial,
+                            readOnly = isInitial || isGeneratedByComputer,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.Transparent),
