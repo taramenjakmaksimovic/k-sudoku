@@ -29,6 +29,9 @@ class SudokuViewModel(
 
     private var timerJob : Job? = null
 
+    private val _isGeneratedByComputer = MutableStateFlow(false)
+    val isGeneratedByComputer : StateFlow<Boolean> = _isGeneratedByComputer
+
 
     private val _boardState = MutableStateFlow(
         SudokuBoard(
@@ -58,6 +61,7 @@ class SudokuViewModel(
         viewModelScope.launch {
             _boardState.value = generateUseCase(currentDifficulty)
             _remainingHints.value = currentDifficulty.maxHintsAllowed
+            _isGeneratedByComputer.value = false
             resetTimer()
             startTimer()
         }
@@ -105,6 +109,7 @@ class SudokuViewModel(
             val solved = solveUseCase(currentBoard)
             if(solved != null){
                 _boardState.value = solved
+                _isGeneratedByComputer.value = true
                 stopTimer()
             }
         }

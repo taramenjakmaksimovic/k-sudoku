@@ -61,6 +61,7 @@ fun SudokuScreen(
     val remainingHints by viewModel.remainingHints.collectAsState()
     val elapsedTime by viewModel.elapsedTime.collectAsState()
     val isPaused by viewModel.isPaused.collectAsState()
+    val isGeneratedByComputer by viewModel.isGeneratedByComputer.collectAsState()
 
     val hours = elapsedTime / 3600
     val minutes = (elapsedTime % 3600) / 60
@@ -255,7 +256,12 @@ fun SudokuScreen(
                 Spacer(Modifier.height(16.dp))
                 Text(
                     text = message,
-                    color = if (message.contains("Congratulations")) Color.Green else Color.Red,
+                    color = when {
+                        message.contains("Congratulations") -> Color.Green
+                        message.contains("generated") -> Color.Black
+                        else -> Color.Red
+
+                    },
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp
                 )
@@ -286,11 +292,12 @@ fun SudokuScreen(
 
         Button(
             onClick = {
-                solvedMessage = if (viewModel.isSolved()){
-                    "Congratulations! You solved this sudoku board!"
-                } else {
-                    "You didn't solve this sudoku board!"
-                }
+                solvedMessage = when {
+                    isGeneratedByComputer -> "This solution was generated."
+                    viewModel.isSolved() -> "Congratulations! You solved this sudoku board!"
+                    else -> "You didn't solve this sudoku board."
+
+            }
             },
         ) {
             Text("Check solution")
