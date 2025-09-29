@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -44,6 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.k_sudoku.presentation.viewmodel.SudokuViewModel
+import com.example.k_sudoku.ui.theme.myGreen
+import com.example.k_sudoku.ui.theme.myPurple
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -224,7 +227,7 @@ fun SudokuScreen(
                                 .fillMaxSize()
                                 .background(Color.Transparent),
                             textStyle = TextStyle(
-                                color = if (isInitial) Color.Black else Color.Blue,
+                                color = if (isInitial) Color.Black else myPurple,
                                 textAlign = TextAlign.Center,
                                 fontWeight = if (isInitial) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 20.sp,
@@ -257,7 +260,7 @@ fun SudokuScreen(
                 Text(
                     text = message,
                     color = when {
-                        message.contains("Congratulations") -> Color.Green
+                        message.contains("Congratulations") -> myGreen
                         message.contains("generated") -> Color.Black
                         else -> Color.Red
 
@@ -271,7 +274,11 @@ fun SudokuScreen(
         Button(
             onClick = {
                 viewModel.togglePause()
-            }
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = myPurple,
+                contentColor = Color.White
+            )
         ) {
             Text( if(isPaused) "Resume" else "Pause")
         }
@@ -282,6 +289,10 @@ fun SudokuScreen(
             onClick = {
                 viewModel.provideHint()
             },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = myPurple,
+                contentColor = Color.White
+            ),
             enabled = remainingHints > 0
 
         ) {
@@ -299,6 +310,10 @@ fun SudokuScreen(
 
             }
             },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = myPurple,
+                contentColor = Color.White
+            )
         ) {
             Text("Check solution")
         }
