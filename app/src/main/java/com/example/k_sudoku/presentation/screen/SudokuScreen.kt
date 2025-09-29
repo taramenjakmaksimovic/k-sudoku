@@ -280,6 +280,7 @@ fun SudokuScreen(
                 containerColor = myPurple,
                 contentColor = Color.White
             ),
+            enabled = !isGeneratedByComputer
 
         ) {
             Text( if(isPaused) "Resume" else "Pause")
@@ -295,8 +296,7 @@ fun SudokuScreen(
                 containerColor = myPurple,
                 contentColor = Color.White
             ),
-            enabled = remainingHints > 0
-
+            enabled = remainingHints > 0 && !isGeneratedByComputer
         ) {
             Text("Hint")
         }
