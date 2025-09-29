@@ -67,10 +67,6 @@ class SudokuViewModel(
         }
     }
 
-  /*  fun setDifficulty(difficulty: SudokuDifficulty) {
-        resetGame(difficulty)
-    } */
-
     fun isSolved() : Boolean {
         val board=_boardState.value.cells
         for (i in 0..8){

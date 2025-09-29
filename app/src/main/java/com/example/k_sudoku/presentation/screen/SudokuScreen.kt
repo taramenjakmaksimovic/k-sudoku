@@ -302,33 +302,5 @@ fun SudokuScreen(
         ) {
             Text("Check solution")
         }
-
-       // Spacer(Modifier.height(16.dp))
-
-      /*  Button(onClick = {
-            viewModel.solveBoard()
-        },
-            ) {
-            Text("Generate solution")
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                viewModel.resetGame()
-                solvedMessage = null
-            },
-        ) {
-            Text("Reset game")
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        Button(
-            onClick = { onBackToHome() },
-        ) {
-            Text("Go back to Homepage")
-        } */
     }
 }
