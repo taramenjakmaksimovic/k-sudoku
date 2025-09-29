@@ -115,6 +115,7 @@ fun SudokuScreen(
                     onClick = {
                         menuExpanded = false
                         viewModel.solveBoard()
+                        viewModel.resetTimer()
                     }
                 )
                 DropdownMenuItem(
@@ -278,7 +279,8 @@ fun SudokuScreen(
             colors = ButtonDefaults.buttonColors(
                 containerColor = myPurple,
                 contentColor = Color.White
-            )
+            ),
+
         ) {
             Text( if(isPaused) "Resume" else "Pause")
         }
