@@ -37,4 +37,5 @@ Select your emulator or connected device and click "Run" button.
 ## 👾 Technologies
 - Kotlin
 - Jetpack Compose
+- [Kotest framework](https://kotest.io/docs/quickstart)
 - [Android Studio](https://developer.android.com/studio)
