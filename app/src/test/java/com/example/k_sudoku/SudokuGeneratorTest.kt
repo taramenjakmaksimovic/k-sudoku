@@ -5,7 +5,7 @@ import com.example.k_sudoku.data.datasource.SudokuGenerator
 import io.kotest.matchers.shouldNotBe
 
 
-class SudokuTestGenerator : StringSpec ({
+class SudokuGeneratorTest : StringSpec ({
     "Full table should have 9 rows and 9 columns" {
         val board = SudokuGenerator.generateFullBoard()
         board.size shouldBe 9
