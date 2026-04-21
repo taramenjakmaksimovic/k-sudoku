@@ -16,6 +16,16 @@ The app also includes a feature to automatically generate the complete solution 
 
 ---
 
+## ✨ Features
+
+- Multiple difficulty levels
+- Hint system based on difficulty
+- Automatic Sudoku board generation
+- Backtracking-based solver
+- Solution validation
+
+---
+
 ## 🚀 Getting started  
 
 ### Prerequisites  
@@ -31,6 +41,11 @@ The app also includes a feature to automatically generate the complete solution 
 Select "Open an Existing Project" and navigate to the cloned directory.
 3. **Run the app**: <br>
 Select your emulator or connected device and click "Run" button.
+
+---
+## 📋 Future improvements
+
+Planned features and improvements are tracked in the Issues section of this repository.
 
 ---
 
