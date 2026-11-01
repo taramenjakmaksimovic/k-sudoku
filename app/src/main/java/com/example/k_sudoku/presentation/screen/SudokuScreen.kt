@@ -48,7 +48,8 @@ import com.example.k_sudoku.presentation.viewmodel.SudokuViewModel
 import com.example.k_sudoku.ui.theme.myGreen
 import com.example.k_sudoku.ui.theme.myPurple
 import kotlinx.coroutines.delay
-import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -73,7 +74,7 @@ fun SudokuScreen(
 
     LaunchedEffect(solvedMessage) {
         if (solvedMessage!=null){
-            delay(3000L)
+            delay(3000L.milliseconds)
             solvedMessage=null
         }
     }
@@ -87,7 +88,7 @@ fun SudokuScreen(
     ) {
         Text(
             String.format
-                (Locale.getDefault(), "%02d:%02d:%02d",
+                (LocalLocale.current.platformLocale, "%02d:%02d:%02d",
                 hours, minutes, seconds),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,

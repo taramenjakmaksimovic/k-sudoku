@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class SudokuViewModel(
     private val generateUseCase: GenerateSudokuUseCase,
@@ -145,7 +146,7 @@ class SudokuViewModel(
         _isPaused.value=false
         timerJob=viewModelScope.launch {
             while (isActive){
-                delay(1000)
+                delay(1000.milliseconds)
                 if(!_isPaused.value)
                     _elapsedTime.value+=1
             }
