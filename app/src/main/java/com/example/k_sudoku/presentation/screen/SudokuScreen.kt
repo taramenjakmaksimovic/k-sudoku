@@ -83,7 +83,7 @@ fun SudokuScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(top = 25.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+            .padding(top = 56.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -93,7 +93,7 @@ fun SudokuScreen(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding( 4.dp)
+                .padding(top = 12.dp, bottom = 4.dp)
 
         )
 
@@ -103,7 +103,10 @@ fun SudokuScreen(
                 .wrapContentSize(Alignment.TopEnd)
 
         ){
-            IconButton(onClick = {menuExpanded=true}) {
+            IconButton(onClick = {
+                menuExpanded=true
+                viewModel.pauseTimer()
+            }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "")
             }
 
