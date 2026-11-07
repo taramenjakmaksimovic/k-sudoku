@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -49,6 +50,7 @@ import com.example.k_sudoku.ui.theme.myGreen
 import com.example.k_sudoku.ui.theme.myPurple
 import kotlinx.coroutines.delay
 import androidx.compose.ui.platform.LocalLocale
+import com.example.k_sudoku.ui.theme.sudokuCellBackground
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -62,6 +64,7 @@ fun SudokuScreen(
     var solvedMessage by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
     var menuExpanded by remember { mutableStateOf(false) }
+    var selectedNumber by remember { mutableStateOf<Int?>(null) }
     val remainingHints by viewModel.remainingHints.collectAsState()
     val elapsedTime by viewModel.elapsedTime.collectAsState()
     val isPaused by viewModel.isPaused.collectAsState()
@@ -155,6 +158,7 @@ fun SudokuScreen(
                 for (col in 0..8) {
                     val value = board.cells[row][col]
                     val isInitial = board.initial[row][col]
+                    val isHighlighted = selectedNumber!=null && value!=0 && value==selectedNumber
 
                     var text by remember(value) {
                         mutableStateOf(
@@ -165,6 +169,7 @@ fun SudokuScreen(
                     Box(
                         modifier = Modifier
                             .size(40.dp)
+                            .background(if (isHighlighted) sudokuCellBackground else Color.Transparent)
                             .drawBehind {
                                 val strokeWidthThin = 1.dp.toPx()
                                 val strokeWidthThick = 3.dp.toPx()
@@ -222,14 +227,22 @@ fun SudokuScreen(
                                 if (newText.isEmpty()) {
                                     text = ""
                                     viewModel.onCellChanged(row, col, 0)
+                                    selectedNumber = null
                                 } else if (newText.length == 1 && newText[0] in '1'..'9') {
                                     text = newText
-                                    viewModel.onCellChanged(row, col, newText.toInt())
+                                    val num = newText.toInt()
+                                    viewModel.onCellChanged(row, col, num)
+                                    selectedNumber = num
                                 }
                             },
                             readOnly = isInitial || isGeneratedByComputer,
                             modifier = Modifier
                                 .fillMaxSize()
+                                .onFocusChanged { focusState ->
+                                    if (focusState.isFocused && value != 0) {
+                                        selectedNumber = value
+                                    }
+                                }
                                 .background(Color.Transparent),
                             textStyle = TextStyle(
                                 color = if (isInitial) Color.Black else myPurple,
