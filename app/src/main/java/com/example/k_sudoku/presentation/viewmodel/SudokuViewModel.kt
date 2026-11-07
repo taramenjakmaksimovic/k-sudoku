@@ -52,6 +52,9 @@ class SudokuViewModel(
     fun onCellChanged(row: Int, col: Int, value: Int){
         val board = _boardState.value
         if(!board.initial[row][col]){
+            if (_isPaused.value) {
+                resumeTimer()
+            }
             board.cells[row][col] = value
             _boardState.value = board.copy()
         }

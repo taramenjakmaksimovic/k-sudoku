@@ -224,7 +224,7 @@ fun SudokuScreen(
                                     viewModel.onCellChanged(row, col, newText.toInt())
                                 }
                             },
-                            readOnly = isInitial || isGeneratedByComputer || isPaused,
+                            readOnly = isInitial || isGeneratedByComputer,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.Transparent),
@@ -308,9 +308,14 @@ fun SudokuScreen(
             onClick = {
                 solvedMessage = when {
                     isGeneratedByComputer -> "This solution was generated."
-                    viewModel.isSolved() -> "Congratulations! You solved this sudoku board!"
-                    else -> "You didn't solve this sudoku board."
-
+                    viewModel.isSolved() -> {
+                        viewModel.stopTimer()
+                        "Congratulations! You solved this sudoku board!"
+                    }
+                    else -> {
+                        viewModel.pauseTimer()
+                        "You didn't solve this sudoku board."
+                    }
             }
             },
             colors = ButtonDefaults.buttonColors(
