@@ -43,14 +43,23 @@ Select "Open an Existing Project" and navigate to the cloned directory.
 Select your emulator or connected device and click "Run" button.
 
 ---
-## 📋 Future improvements
-
-Planned features and improvements are tracked in the Issues section of this repository.
-
----
 
 ## 👾 Technologies
 - Kotlin
 - Jetpack Compose
 - [Kotest framework](https://kotest.io/docs/quickstart)
 - [Android Studio](https://developer.android.com/studio)
+
+---
+## 🔨 Environment & Build 
+
+* **JDK Version:** Java 17 
+* **Tested OS:** macOS 12 (Monterey)
+* **IDE:** Android Studio Rabbit 2
+
+> **Note** : This configuration is used because the development machine runs on macOS 12 with no further OS updates available.
+
+---
+## 📋 Future improvements
+
+Planned features and improvements are tracked in the Issues section of this repository.
