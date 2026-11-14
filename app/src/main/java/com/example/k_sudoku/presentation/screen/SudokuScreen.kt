@@ -315,7 +315,7 @@ fun SudokuScreen(
             ),
             enabled = remainingHints > 0 && !isGeneratedByComputer
         ) {
-            Text("Hint")
+            Text("Hint ($remainingHints)")
         }
 
         Spacer(Modifier.height(6.dp))
